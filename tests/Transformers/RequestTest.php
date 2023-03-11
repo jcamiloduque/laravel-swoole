@@ -117,7 +117,7 @@ class SwooleRequestStub extends SwooleRequest
 
     public $fd = 1;
 
-    function rawContent()
+    function rawContent(): string | false
     {
         return 'foo=bar';
     }

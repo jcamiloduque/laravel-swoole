@@ -17,9 +17,9 @@ class HandShakeHandlerTest extends TestCase
         $request->header['sec-websocket-key'] = 'Bet8DkPFq9ZxvIBvPcNy1A==';
 
         $response = m::mock(Response::class);
-        $response->shouldReceive('header')->withAnyArgs()->times(4)->andReturnSelf();
-        $response->shouldReceive('status')->with(101)->once()->andReturnSelf();
-        $response->shouldReceive('end')->withAnyArgs()->once()->andReturnSelf();
+        $response->shouldReceive('header')->withAnyArgs()->times(4)->andReturn(true);
+        $response->shouldReceive('status')->with(101)->once()->andReturn(true);
+        $response->shouldReceive('end')->withAnyArgs()->once()->andReturn(true);
 
         $handler = new HandShakeHandler;
 
@@ -37,7 +37,7 @@ class HandShakeHandlerTest extends TestCase
         $request->header['sec-websocket-key'] = 'test';
 
         $response = m::mock(Response::class);
-        $response->shouldReceive('end')->withAnyArgs()->once()->andReturnSelf();
+        $response->shouldReceive('end')->withAnyArgs()->once()->andReturn(true);
 
         $handler = new HandShakeHandler;
 
@@ -56,9 +56,9 @@ class HandShakeHandlerTest extends TestCase
         $request->header['sec-websocket-protocol'] = 'graphql-ws';
 
         $response = m::mock(Response::class);
-        $response->shouldReceive('header')->withAnyArgs()->times(5)->andReturnSelf();
-        $response->shouldReceive('status')->with(101)->once()->andReturnSelf();
-        $response->shouldReceive('end')->withAnyArgs()->once()->andReturnSelf();
+        $response->shouldReceive('header')->withAnyArgs()->times(5)->andReturn(true);
+        $response->shouldReceive('status')->with(101)->once()->andReturn(true);
+        $response->shouldReceive('end')->withAnyArgs()->once()->andReturn(true);
 
         $handler = new HandShakeHandler;
 

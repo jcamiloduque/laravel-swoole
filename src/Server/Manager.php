@@ -8,8 +8,6 @@ use Swoole\Process;
 use Swoole\Server\Task;
 use Illuminate\Support\Str;
 use SwooleTW\Http\Helpers\OS;
-use SwooleTW\Http\Server\Sandbox;
-use SwooleTW\Http\Server\PidManager;
 use SwooleTW\Http\Task\SwooleTaskJob;
 use Illuminate\Support\Facades\Facade;
 use SwooleTW\Http\Websocket\Websocket;
@@ -51,14 +49,14 @@ class Manager
     /**
      * @var string
      */
-    protected $basePath;
+    protected string $basePath;
 
     /**
      * Server events.
      *
      * @var array
      */
-    protected $events = [
+    protected array $events = [
         'start',
         'shutDown',
         'workerStart',
@@ -74,6 +72,9 @@ class Manager
         'managerStop',
         'request',
     ];
+
+    protected bool $disableTestingCheck = false;
+
 
     /**
      * HTTP server manager constructor.
@@ -394,7 +395,16 @@ class Manager
      */
     protected function isInTesting()
     {
-        return defined('IN_PHPUNIT') && IN_PHPUNIT;
+        if ($this->disableTestingCheck) {
+            return false;
+        }
+
+        return (defined('IN_PHPUNIT') && IN_PHPUNIT);
+    }
+
+    public function disableTestingCheck()
+    {
+        $this->disableTestingCheck = true;
     }
 
     /**
@@ -409,8 +419,10 @@ class Manager
         }
 
         $exception = $this->normalizeException($e);
-        $this->container->make(ConsoleOutput::class)
-            ->writeln(sprintf("<error>%s</error>", $exception));
+        if (!$this->disableTestingCheck){
+            $this->container->make(ConsoleOutput::class)
+                ->writeln(sprintf("<error>%s</error>", $exception));
+        }
 
         $this->container->make(ExceptionHandler::class)
             ->report($exception);
